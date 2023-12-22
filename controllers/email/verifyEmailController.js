@@ -17,7 +17,8 @@ export const verifyEmail = async (req, res) => {
 
     return res.redirect(
       // `${process.env.FRONTEND_HOST}/email/verify-email/${token}`
-      process.env.FRONTEND_HOST
+      `${process.env.FRONTEND_HOST}/auth`
+      // process.env.FRONTEND_HOST
     );
   } catch (err) {
     console.error(err);
