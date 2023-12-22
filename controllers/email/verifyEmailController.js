@@ -16,7 +16,8 @@ export const verifyEmail = async (req, res) => {
     if (!user) return res.status(404).send({ message: "User not found" });
 
     return res.redirect(
-      `${process.env.FRONTEND_HOST}/email/verify-email/${token}`
+      // `${process.env.FRONTEND_HOST}/email/verify-email/${token}`
+      process.env.FRONTEND_HOST
     );
   } catch (err) {
     console.error(err);
