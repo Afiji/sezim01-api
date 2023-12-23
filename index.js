@@ -77,12 +77,13 @@ app.use(express.json());
 app.use(adminJs.options.rootPath, router);
 const port = process.env.PORT || 5057;
 const corsOptions = {
-  origin: process.env.FRONTEND_HOST,
+  // origin: process.env.FRONTEND_HOST,
+  origin: "http://localhost:3000",
   optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
 // app.use(express.static("uploads"));
 
 app.use("/todos", todosRoutes);
