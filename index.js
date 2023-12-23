@@ -77,8 +77,8 @@ app.use(express.json());
 app.use(adminJs.options.rootPath, router);
 const port = process.env.PORT || 5057;
 const corsOptions = {
-  // origin: process.env.FRONTEND_HOST,
-  origin: "http://localhost:3000",
+  origin: process.env.FRONTEND_HOST,
+  // origin: "http://localhost:3000",
   optionsSuccessStatus: 200,
 };
 
