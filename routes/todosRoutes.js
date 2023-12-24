@@ -7,6 +7,11 @@ import { editTodoNameController } from "../controllers/todos/editTodoNameControl
 import { deleteTodoController } from "../controllers/todos/deleteTodoController.js";
 import { deleteAllTodosController } from "../controllers/todos/deleteAllTodosController.js";
 import { exportTodosController } from "../controllers/todos/exportTodosController.js";
+import { upload } from "../multerS3.js";
+import {
+  uploadTodoImageController,
+  deleteTodoImageController,
+} from "../controllers/todos/todoImageController.js";
 
 const router = express.Router();
 
@@ -21,5 +26,12 @@ router.patch("/edit-todo-name/:todoId", verifyToken, editTodoNameController);
 router.delete("/delete-todo/:todoId", verifyToken, deleteTodoController);
 router.delete("/delete-all-todos", verifyToken, deleteAllTodosController);
 router.get("/export-todos", verifyToken, exportTodosController);
+router.post(
+  "/upload-image/:todoId",
+  verifyToken,
+  upload.single("image"),
+  uploadTodoImageController
+);
+router.delete("/delete-image/:todoId", verifyToken, deleteTodoImageController);
 
 export default router;
