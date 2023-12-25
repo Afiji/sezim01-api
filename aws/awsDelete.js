@@ -9,7 +9,7 @@ export const deleteImageFromS3 = async (imageKey) => {
     Key: finalPath,
   };
   try {
-    // await s3Client.send(new DeleteObjectCommand(deleteParams));
+    await s3Client.send(new DeleteObjectCommand(deleteParams));
     console.log("Image deleted successfully");
   } catch (error) {
     console.error("Error deleting image from S3", error);
