@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { verifyToken } from "../middlewares/verifyToken.js";
 import { getUserController } from "../controllers/user/getUserController.js";
 import { editProfileController } from "../controllers/user/updateUserInfo.js";
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { deleteImageFromS3 } from "../aws/awsDelete.js";
 import { upload } from "../multer.js";
 import Auth from "../models/Auth.js";
 import { S3Client } from "@aws-sdk/client-s3";
@@ -38,14 +38,8 @@ router.post(
 
       const user = await Auth.findById(userId);
       if (user && user.avatar) {
-        const fileKey = user.avatar.split("/").pop();
-
-        const deleteParams = {
-          Bucket: process.env.AWS_BUCKET_NAME,
-          Key: `profile-images/${fileKey}`,
-        };
-
-        await s3Client.send(new DeleteObjectCommand(deleteParams));
+        const fileKey = new URL(user.avatar).pathname.split("/").pop();
+        await deleteImageFromS3(fileKey, "profile-images");
       }
 
       const avatarUrl = req.file.location;
@@ -77,18 +71,20 @@ router.delete("/delete-avatar", verifyToken, async (req, res) => {
     //   Bucket: process.env.AWS_BUCKET_NAME,
     //   Key: `profile-images/${fileKey}`,
     // };
+    // const deleteParams = {
+    //   Bucket: process.env.AWS_BUCKET_NAME,
+    //   Key: `profile-images/${fileKey}`,
+    // };
 
-    const fileKey = decodeURIComponent(
-      new URL(user.avatar).pathname.split("/").pop()
-    );
-    const deleteParams = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `profile-images/${fileKey}`,
-    };
+    if (user.avatar) {
+      // const fileKey = decodeURIComponent(
+      //   new URL(user.avatar).pathname.split("/").pop()
+      // );
+      const fileKey = new URL(user.avatar).pathname.split("/").pop();
+      await deleteImageFromS3(fileKey, "profile-images");
+    }
 
-    await s3Client.send(new DeleteObjectCommand(deleteParams));
-
-    await Auth.findByIdAndUpdate(userId, { avatar: "" });
+    await Auth.findByIdAndUpdate(userId, { avatar: null });
     res.status(200).json({ message: "Avatar deleted successfully" });
   } catch (error) {
     console.error("Deletion error:", error);

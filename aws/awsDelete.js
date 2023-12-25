@@ -1,8 +1,8 @@
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { s3Client } from "./awsConfig.js";
 
-export const deleteImageFromS3 = async (imageKey) => {
-  const rootFolder = "todos";
+export const deleteImageFromS3 = async (imageKey, rootFolder = "todos") => {
+  // const rootFolder = "todos";
   const finalPath = `${rootFolder}/${decodeURIComponent(imageKey)}`;
   const deleteParams = {
     Bucket: process.env.AWS_BUCKET_NAME,
