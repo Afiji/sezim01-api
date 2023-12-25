@@ -72,7 +72,15 @@ router.delete("/delete-avatar", verifyToken, async (req, res) => {
     }
 
     // const fileKey = user.avatar.split("profile-images/")[1];
-    const fileKey = new URL(user.avatar).pathname.split("/").pop();
+    // const fileKey = new URL(user.avatar).pathname.split("/").pop();
+    // const deleteParams = {
+    //   Bucket: process.env.AWS_BUCKET_NAME,
+    //   Key: `profile-images/${fileKey}`,
+    // };
+
+    const fileKey = decodeURIComponent(
+      new URL(user.avatar).pathname.split("/").pop()
+    );
     const deleteParams = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: `profile-images/${fileKey}`,
