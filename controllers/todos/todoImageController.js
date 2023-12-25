@@ -64,19 +64,17 @@ export const deleteTodoImageController = async (req, res) => {
   try {
     const { id } = req.params;
     const todo = await Todo.findById(id);
-    if (todo.userId.toString() !== req.user.userId) {
-      return res
-        .status(403)
-        .send({ message: "Unauthorized to delete this todo" });
+    if (!todo || !todo.imageUrl) {
+      return res.status(404).json({ message: "Todo or image not found" });
     }
     if (todo.imageUrl) {
       const imageKey = new URL(todo.imageUrl).pathname.split("/").pop();
       await deleteImageFromS3(imageKey);
     }
 
-    await Todo.findByIdAndDelete(id);
+    todo.imageUrl = null;
     return res.status(200).send({
-      message: "TODO IS DELETED",
+      message: "IMAGE IS DELETED",
     });
   } catch (error) {
     console.error(error);
