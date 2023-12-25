@@ -71,7 +71,8 @@ router.delete("/delete-avatar", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "User or avatar not found" });
     }
 
-    const fileKey = user.avatar.split("profile-images/")[1];
+    // const fileKey = user.avatar.split("profile-images/")[1];
+    const fileKey = new URL(user.avatar).pathname.split("/").pop();
     const deleteParams = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: `profile-images/${fileKey}`,

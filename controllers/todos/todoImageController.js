@@ -62,8 +62,11 @@ export const deleteTodoImageController = async (req, res) => {
   //     .json({ message: "Error deleting image", error: error.toString() });
   // }
   try {
-    const { id } = req.params;
-    const todo = await Todo.findById(id);
+    // const { id } = req.params;
+    // const todo = await Todo.findById(id);
+    const userId = req.user.userId;
+    const todoId = req.params.todoId;
+    const todo = await Todo.findOne({ _id: todoId, userId: userId });
     if (!todo || !todo.imageUrl) {
       return res.status(404).json({ message: "Todo or image not found" });
     }
@@ -73,6 +76,7 @@ export const deleteTodoImageController = async (req, res) => {
     }
 
     todo.imageUrl = null;
+    await todo.save();
     return res.status(200).send({
       message: "IMAGE IS DELETED",
     });
