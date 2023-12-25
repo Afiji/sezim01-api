@@ -48,7 +48,7 @@ export const deleteTodoImageController = async (req, res) => {
       Key: `todos/${fileKey}`,
     };
 
-    // await s3Client.send(new DeleteObjectCommand(deleteParams));
+    await s3Client.send(new DeleteObjectCommand(deleteParams));
 
     todo.imageUrl = null;
     await todo.save();
